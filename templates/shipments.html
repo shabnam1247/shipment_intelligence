@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shipments | ShipIntel</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">🚚</div>
+
+            <div>
+                <h2>ShipIntel</h2>
+                <span>Logistics AI</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-title">MAIN</p>
+
+            <a href="{{ url_for('dashboard') }}" class="nav-item">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('shipments') }}"
+               class="nav-item active">
+                <span>📦</span>
+                Shipments
+            </a>
+
+            <a href="{{ url_for('predictions') }}"
+               class="nav-item">
+                <span>🤖</span>
+                Predictions
+            </a>
+
+            <a href="{{ url_for('anomalies') }}"
+               class="nav-item">
+                <span>⚠</span>
+                Anomalies
+            </a>
+
+
+            <p class="nav-title">DATA</p>
+
+            <a href="{{ url_for('upload') }}" class="nav-item">
+                <span>↑</span>
+                Upload Data
+            </a>
+
+            <a href="{{ url_for('download_report') }}" class="nav-item">
+                <span>↓</span>
+                Reports
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="system-box">
+
+                <div class="status-dot"></div>
+
+                <div>
+                    <strong>System Online</strong>
+                    <small>MongoDB connected</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+        <header class="topbar">
+
+            <div class="mobile-menu"
+                 id="menuButton">
+                ☰
+            </div>
+
+            <div>
+
+                <h1>Shipment Management</h1>
+
+                <p>
+                    Explore and monitor all shipment records
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="live-status">
+
+                    <span class="status-dot"></span>
+
+                    Live Data
+
+                </div>
+
+                <div class="profile">
+
+                    <div class="profile-avatar">
+                        SI
+                    </div>
+
+                    <div>
+
+                        <strong>Shipment Admin</strong>
+
+                        <small>
+                            Administrator
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+            <!-- PAGE HEADER -->
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>All Shipments</h2>
+
+                    <p>
+                        Complete shipment records stored in MongoDB
+                    </p>
+
+                </div>
+
+                <a href="{{ url_for('upload') }}"
+                   class="action-btn primary">
+
+                    + Upload Data
+
+                </a>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+
+            <div class="mini-stats">
+
+                <div class="mini-stat">
+
+                    <span>📦</span>
+
+                    <div>
+                        <small>Total Shipments</small>
+                        <strong>{{ shipments|length }}</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="mini-stat">
+
+                    <span>⚠</span>
+
+                    <div>
+                        <small>Delayed</small>
+
+                        <strong>
+                            {{ shipments|selectattr('is_delayed', 'equalto', 1)|list|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="mini-stat">
+
+                    <span>✓</span>
+
+                    <div>
+                        <small>On Time</small>
+
+                        <strong>
+                            {{ shipments|selectattr('is_delayed', 'equalto', 0)|list|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TABLE CARD -->
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h3>Shipment Records</h3>
+
+                        <p>
+                            Search shipment ID, carrier, region or destination
+                        </p>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        🔍
+
+                        <input
+                            type="text"
+                            id="shipmentSearch"
+                            placeholder="Search shipments..."
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table id="shipmentTable">
+
+                        <thead>
+
+                        <tr>
+
+                            <th>Shipment ID</th>
+
+                            <th>Date</th>
+
+                            <th>Carrier</th>
+
+                            <th>Origin</th>
+
+                            <th>Destination</th>
+
+                            <th>Mode</th>
+
+                            <th>Priority</th>
+
+                            <th>Delivery</th>
+
+                            <th>Status</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                        {% for shipment in shipments %}
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    {{ shipment.shipment_id }}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+                                {{ shipment.shipment_date }}
+                            </td>
+
+
+                            <td>
+                                {{ shipment.carrier }}
+                            </td>
+
+
+                            <td>
+                                {{ shipment.origin }}
+                            </td>
+
+
+                            <td>
+                                {{ shipment.destination }}
+                            </td>
+
+
+                            <td>
+                                {{ shipment.shipping_mode }}
+                            </td>
+
+
+                            <td>
+
+                                <span class="priority-badge">
+
+                                    {{ shipment.priority }}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ shipment.actual_delivery_days }}
+                                days
+
+                            </td>
+
+
+                            <td>
+
+                                {% if shipment.is_delayed == 1 %}
+
+                                <span class="status-badge delayed">
+                                    Delayed
+                                </span>
+
+                                {% else %}
+
+                                <span class="status-badge delivered">
+                                    On Time
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+
+                                <a class="view-btn"
+                                   href="{{ url_for('shipment_detail', shipment_id=shipment.shipment_id) }}">
+
+                                    View →
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+const search =
+    document.getElementById("shipmentSearch");
+
+if (search) {
+
+    search.addEventListener(
+        "keyup",
+        function () {
+
+            const value =
+                this.value.toLowerCase();
+
+            const rows =
+                document.querySelectorAll(
+                    "#shipmentTable tbody tr"
+                );
+
+            rows.forEach(function(row) {
+
+                row.style.display =
+                    row.textContent
+                        .toLowerCase()
+                        .includes(value)
+                        ? ""
+                        : "none";
+
+            });
+
+        }
+    );
+
+}
+
+
+const menu =
+    document.getElementById("menuButton");
+
+const sidebar =
+    document.getElementById("sidebar");
+
+if (menu && sidebar) {
+
+    menu.addEventListener(
+        "click",
+        function() {
+
+            sidebar.classList.toggle("active");
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>

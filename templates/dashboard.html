@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shipment Intelligence</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🚚
+            </div>
+
+            <div>
+                <h2>ShipIntel</h2>
+                <span>Logistics AI</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-title">MAIN</p>
+
+            <a href="{{ url_for('dashboard') }}" class="nav-item active">
+                <span>▦</span>
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('shipments') }}" class="nav-item">
+                <span>📦</span>
+                Shipments
+            </a>
+
+            <a href="{{ url_for('predictions') }}" class="nav-item">
+                <span>🤖</span>
+                Predictions
+            </a>
+
+            <a href="{{ url_for('anomalies') }}" class="nav-item">
+                <span>⚠</span>
+                Anomalies
+            </a>
+
+
+            <p class="nav-title">DATA</p>
+
+            <a href="{{ url_for('upload') }}" class="nav-item">
+                <span>↑</span>
+                Upload Data
+            </a>
+
+            <a href="{{ url_for('download_report') }}" class="nav-item">
+                <span>↓</span>
+                Reports
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="system-box">
+
+                <div class="status-dot"></div>
+
+                <div>
+                    <strong>System Online</strong>
+                    <small>All services running</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div class="mobile-menu"
+                 id="menuButton">
+                ☰
+            </div>
+
+            <div>
+
+                <h1>Shipment Overview</h1>
+
+                <p>
+                    Monitor logistics performance and delivery risks
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="live-status">
+
+                    <span class="status-dot"></span>
+
+                    Live Data
+
+                </div>
+
+                <div class="profile">
+
+                    <div class="profile-avatar">
+                        SI
+                    </div>
+
+                    <div>
+                        <strong>Shipment Admin</strong>
+                        <small>Administrator</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CONTENT ================= -->
+
+        <section class="content">
+
+
+            <!-- WELCOME -->
+
+            <div class="welcome-section">
+
+                <div>
+
+                    <h2>
+                        Good evening 👋
+                    </h2>
+
+                    <p>
+                        Here is today's shipment intelligence summary.
+                    </p>
+
+                </div>
+
+
+                <div class="quick-actions">
+
+                    <a href="{{ url_for('upload') }}"
+                       class="action-btn primary">
+
+                        + Upload Shipment Data
+
+                    </a>
+
+                    <a href="{{ url_for('download_report') }}"
+                       class="action-btn secondary">
+
+                        ↓ Export Report
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= KPI CARDS ================= -->
+
+            <div class="kpi-grid">
+
+
+                <div class="kpi-card">
+
+                    <div class="kpi-top">
+
+                        <div class="kpi-icon blue">
+                            📦
+                        </div>
+
+                        <span class="kpi-label">
+                            TOTAL SHIPMENTS
+                        </span>
+
+                    </div>
+
+                    <h3 id="totalShipments">
+                        {{ total_shipments }}
+                    </h3>
+
+                    <div class="kpi-footer">
+
+                        <span class="positive">
+                            ● Active
+                        </span>
+
+                        <span>
+                            All shipments
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card">
+
+                    <div class="kpi-top">
+
+                        <div class="kpi-icon red">
+                            ⚠
+                        </div>
+
+                        <span class="kpi-label">
+                            DELAYED
+                        </span>
+
+                    </div>
+
+                    <h3 id="delayedShipments">
+                        {{ delayed_shipments }}
+                    </h3>
+
+                    <div class="kpi-footer">
+
+                        <span class="negative">
+                            Requires attention
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card">
+
+                    <div class="kpi-top">
+
+                        <div class="kpi-icon orange">
+                            %
+                        </div>
+
+                        <span class="kpi-label">
+                            DELAY RATE
+                        </span>
+
+                    </div>
+
+                    <h3 id="delayRate">
+                        {{ delay_rate }}%
+                    </h3>
+
+                    <div class="kpi-footer">
+
+                        <span>
+                            Current dataset
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card">
+
+                    <div class="kpi-top">
+
+                        <div class="kpi-icon green">
+                            ⏱
+                        </div>
+
+                        <span class="kpi-label">
+                            AVG DELIVERY
+                        </span>
+
+                    </div>
+
+                    <h3 id="avgDelivery">
+                        {{ avg_delivery }}
+                    </h3>
+
+                    <div class="kpi-footer">
+
+                        <span class="positive">
+                            Days
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div class="kpi-card">
+
+                    <div class="kpi-top">
+
+                        <div class="kpi-icon purple">
+                            ◈
+                        </div>
+
+                        <span class="kpi-label">
+                            ANOMALIES
+                        </span>
+
+                    </div>
+
+                    <h3 id="anomalyCount">
+                        {{ anomalies }}
+                    </h3>
+
+                    <div class="kpi-footer">
+
+                        <span class="negative">
+                            Detected
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================= ALERT ================= -->
+
+            <div class="risk-banner">
+
+                <div class="risk-icon">
+                    ⚠
+                </div>
+
+                <div class="risk-content">
+
+                    <strong>
+                        Shipment Risk Monitoring
+                    </strong>
+
+                    <p>
+                        The system continuously analyzes shipment
+                        delays and unusual delivery patterns.
+                    </p>
+
+                </div>
+
+                <a href="{{ url_for('anomalies') }}">
+                    View Anomalies →
+                </a>
+
+            </div>
+
+
+            <!-- ================= CHART ROW 1 ================= -->
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>Performance Analytics</h2>
+
+                    <p>
+                        Shipment trends and operational performance
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-grid">
+
+
+                <!-- MONTHLY -->
+
+                <div class="chart-card large">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <h3>Shipment Volume</h3>
+
+                            <p>
+                                Monthly shipment trend
+                            </p>
+
+                        </div>
+
+                        <div class="chart-badge">
+                            Monthly
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas id="monthlyChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CARRIER -->
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <h3>Carrier Performance</h3>
+
+                            <p>
+                                Delay rate by carrier
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas id="carrierChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================= CHART ROW 2 ================= -->
+
+            <div class="chart-grid">
+
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <h3>Regional Risk</h3>
+
+                            <p>
+                                Delay rate by region
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container">
+
+                        <canvas id="regionChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-card">
+
+                    <div class="chart-header">
+
+                        <div>
+
+                            <h3>Shipping Mode</h3>
+
+                            <p>
+                                Delay distribution by mode
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="chart-container doughnut-container">
+
+                        <canvas id="modeChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================= QUICK INSIGHTS ================= -->
+
+            <div class="section-title">
+
+                <div>
+
+                    <h2>Quick Insights</h2>
+
+                    <p>
+                        Key areas requiring attention
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="insight-grid">
+
+
+                <div class="insight-card">
+
+                    <div class="insight-icon red">
+                        ⚠
+                    </div>
+
+                    <div>
+
+                        <h3>Delay Monitoring</h3>
+
+                        <p>
+                            Track delayed shipments and identify
+                            recurring delivery problems.
+                        </p>
+
+                        <a href="{{ url_for('predictions') }}">
+                            View predictions →
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="insight-card">
+
+                    <div class="insight-icon purple">
+                        ◈
+                    </div>
+
+                    <div>
+
+                        <h3>Anomaly Detection</h3>
+
+                        <p>
+                            Machine learning identifies unusual
+                            shipment patterns.
+                        </p>
+
+                        <a href="{{ url_for('anomalies') }}">
+                            View anomalies →
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div class="insight-card">
+
+                    <div class="insight-icon blue">
+                        📊
+                    </div>
+
+                    <div>
+
+                        <h3>Shipment Analysis</h3>
+
+                        <p>
+                            Explore shipment records, carriers,
+                            regions and shipping modes.
+                        </p>
+
+                        <a href="{{ url_for('shipments') }}">
+                            Explore shipments →
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================= FOOTER ================= -->
+
+            <footer class="dashboard-footer">
+
+                <span>
+                    Shipment Intelligence System
+                </span>
+
+                <span>
+                    Python • Flask • MongoDB • Machine Learning
+                </span>
+
+            </footer>
+
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= FLASK DATA ================= -->
+
+<script>
+
+window.monthlyLabels =
+    {{ monthly_labels | default([]) | tojson }};
+
+window.monthlyValues =
+    {{ monthly_values | default([]) | tojson }};
+
+
+window.carrierLabels =
+    {{ carrier_labels | default([]) | tojson }};
+
+window.carrierValues =
+    {{ carrier_values | default([]) | tojson }};
+
+
+window.regionLabels =
+    {{ region_labels | default([]) | tojson }};
+
+window.regionValues =
+    {{ region_values | default([]) | tojson }};
+
+
+window.modeLabels =
+    {{ mode_labels | default([]) | tojson }};
+
+window.modeValues =
+    {{ mode_values | default([]) | tojson }};
+
+</script>
+
+
+<!-- Dashboard JS -->
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+
+
+</body>
+</html>

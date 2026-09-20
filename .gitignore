@@ -2,7 +2,15 @@
 __pycache__/
 *.py[codz]
 *$py.class
+venv/
+.env
+__pycache__/
+*.pyc
 
+models/*.pkl
+
+data/processed/*
+reports/*
 # C extensions
 *.so
 

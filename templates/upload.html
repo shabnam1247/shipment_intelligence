@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="page-title">
+
+    <div>
+
+        <h1>
+            Upload Shipment Data
+        </h1>
+
+        <p>
+            Upload CSV or Excel shipment data
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="upload-card">
+
+
+    <div class="upload-icon">
+        ↑
+    </div>
+
+
+    <h2>
+        Upload Shipment Dataset
+    </h2>
+
+
+    <p>
+        Supported formats:
+        CSV and Excel
+    </p>
+
+
+    <form
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+
+        <div class="file-input">
+
+            <input
+                type="file"
+                name="file"
+                accept=".csv,.xlsx"
+                required
+            >
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="button"
+        >
+
+            Upload & Analyze
+
+        </button>
+
+
+    </form>
+
+
+    <div class="upload-info">
+
+        <h4>
+            Required columns
+        </h4>
+
+
+        <p>
+            shipment_id, order_date, ship_date,
+            expected_delivery_date,
+            actual_delivery_date, carrier,
+            origin, destination, region,
+            shipping_mode, distance_km,
+            package_weight, shipping_cost,
+            weather, traffic_level,
+            warehouse_delay, customs_delay,
+            vehicle_type, order_priority
+        </p>
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

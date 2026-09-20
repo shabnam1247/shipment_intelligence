@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+<div class="page-title">
+
+    <div>
+
+        <h1>
+            Shipment {{ shipment.shipment_id }}
+        </h1>
+
+        <p>
+            Detailed shipment information
+        </p>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('shipments') }}"
+        class="button secondary"
+    >
+        Back
+    </a>
+
+</div>
+
+
+<div class="detail-grid">
+
+
+    <div class="detail-card">
+
+        <h3>
+            Shipment Information
+        </h3>
+
+
+        <div class="detail-row">
+
+            <span>
+                Carrier
+            </span>
+
+            <strong>
+                {{ shipment.carrier }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Origin
+            </span>
+
+            <strong>
+                {{ shipment.origin }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Destination
+            </span>
+
+            <strong>
+                {{ shipment.destination }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Region
+            </span>
+
+            <strong>
+                {{ shipment.region }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Shipping Mode
+            </span>
+
+            <strong>
+                {{ shipment.shipping_mode }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Distance
+            </span>
+
+            <strong>
+                {{ shipment.distance_km }} km
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="detail-card">
+
+        <h3>
+            Delivery Intelligence
+        </h3>
+
+
+        <div class="detail-row">
+
+            <span>
+                Expected Days
+            </span>
+
+            <strong>
+                {{ shipment.expected_days }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Actual Days
+            </span>
+
+            <strong>
+                {{ shipment.delivery_days }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Delay
+            </span>
+
+            <strong>
+                {{ shipment.delay_days }}
+                days
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Weather
+            </span>
+
+            <strong>
+                {{ shipment.weather }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Traffic
+            </span>
+
+            <strong>
+                {{ shipment.traffic_level }}
+            </strong>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <span>
+                Anomaly
+            </span>
+
+            <strong>
+
+                {% if shipment.anomaly == 1 %}
+
+                    <span class="badge danger">
+                        ANOMALY
+                    </span>
+
+                {% else %}
+
+                    <span class="badge success">
+                        NORMAL
+                    </span>
+
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+{% endblock %}

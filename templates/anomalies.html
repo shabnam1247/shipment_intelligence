@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Anomalies | ShipIntel</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">🚚</div>
+
+            <div>
+                <h2>ShipIntel</h2>
+                <span>Logistics AI</span>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <p class="nav-title">MAIN</p>
+
+
+            <a href="{{ url_for('dashboard') }}"
+               class="nav-item">
+
+                <span>▦</span>
+                Dashboard
+
+            </a>
+
+
+            <a href="{{ url_for('shipments') }}"
+               class="nav-item">
+
+                <span>📦</span>
+                Shipments
+
+            </a>
+
+
+            <a href="{{ url_for('predictions') }}"
+               class="nav-item">
+
+                <span>🤖</span>
+                Predictions
+
+            </a>
+
+
+            <a href="{{ url_for('anomalies') }}"
+               class="nav-item active">
+
+                <span>⚠</span>
+                Anomalies
+
+            </a>
+
+
+            <p class="nav-title">DATA</p>
+
+
+            <a href="{{ url_for('upload') }}"
+               class="nav-item">
+
+                <span>↑</span>
+                Upload Data
+
+            </a>
+
+
+            <a href="{{ url_for('download_report') }}"
+               class="nav-item">
+
+                <span>↓</span>
+                Reports
+
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="system-box">
+
+                <div class="status-dot"></div>
+
+                <div>
+                    <strong>Anomaly Engine Online</strong>
+                    <small>Monitoring shipments</small>
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main-content">
+
+
+        <header class="topbar">
+
+            <div class="mobile-menu"
+                 id="menuButton">
+
+                ☰
+
+            </div>
+
+
+            <div>
+
+                <h1>Anomaly Detection</h1>
+
+                <p>
+                    Identify unusual shipment patterns
+                </p>
+
+            </div>
+
+
+            <div class="topbar-right">
+
+                <div class="live-status">
+
+                    <span class="status-dot"></span>
+
+                    Monitoring
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h2>Detected Anomalies</h2>
+
+                    <p>
+                        Machine learning based anomaly monitoring
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY CARDS -->
+
+            <div class="anomaly-summary">
+
+
+                <div class="anomaly-summary-card">
+
+                    <div class="summary-icon purple">
+                        ◈
+                    </div>
+
+                    <div>
+
+                        <span>
+                            TOTAL ANOMALIES
+                        </span>
+
+                        <strong>
+                            {{ anomalies|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="anomaly-summary-card">
+
+                    <div class="summary-icon red">
+                        ⚠
+                    </div>
+
+                    <div>
+
+                        <span>
+                            NEEDS REVIEW
+                        </span>
+
+                        <strong>
+                            {{ anomalies|length }}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="anomaly-summary-card">
+
+                    <div class="summary-icon blue">
+                        🔎
+                    </div>
+
+                    <div>
+
+                        <span>
+                            ML MONITORING
+                        </span>
+
+                        <strong>
+                            Active
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- INFORMATION BANNER -->
+
+            <div class="anomaly-banner">
+
+                <div class="anomaly-banner-icon">
+                    ◈
+                </div>
+
+                <div>
+
+                    <strong>
+                        How anomaly detection works
+                    </strong>
+
+                    <p>
+                        The machine learning model identifies
+                        shipment records that differ significantly
+                        from normal shipment patterns.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ANOMALY TABLE -->
+
+            <div class="table-card">
+
+                <div class="table-header">
+
+                    <div>
+
+                        <h3>Anomaly Records</h3>
+
+                        <p>
+                            Shipments identified as unusual
+                        </p>
+
+                    </div>
+
+
+                    <div class="search-box">
+
+                        🔍
+
+                        <input
+                            type="text"
+                            id="anomalySearch"
+                            placeholder="Search anomalies..."
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div class="table-wrapper">
+
+                    <table id="anomalyTable">
+
+                        <thead>
+
+                        <tr>
+
+                            <th>Shipment ID</th>
+
+                            <th>Carrier</th>
+
+                            <th>Origin</th>
+
+                            <th>Destination</th>
+
+                            <th>Weight</th>
+
+                            <th>Distance</th>
+
+                            <th>Delivery</th>
+
+                            <th>Detection</th>
+
+                        </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                        {% for item in anomalies %}
+
+                        <tr>
+
+                            <td>
+
+                                <strong>
+                                    {{ item.shipment_id }}
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+                                {{ item.carrier }}
+                            </td>
+
+
+                            <td>
+                                {{ item.origin }}
+                            </td>
+
+
+                            <td>
+                                {{ item.destination }}
+                            </td>
+
+
+                            <td>
+                                {{ item.weight }}
+                            </td>
+
+
+                            <td>
+                                {{ item.distance }}
+                            </td>
+
+
+                            <td>
+                                {{ item.actual_delivery_days }}
+                                days
+                            </td>
+
+
+                            <td>
+
+                                <span class="anomaly-badge">
+
+                                    ⚠ Anomaly
+
+                                </span>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+const search =
+    document.getElementById(
+        "anomalySearch"
+    );
+
+if (search) {
+
+    search.addEventListener(
+        "keyup",
+        function() {
+
+            const value =
+                this.value.toLowerCase();
+
+            document
+                .querySelectorAll(
+                    "#anomalyTable tbody tr"
+                )
+                .forEach(function(row) {
+
+                    row.style.display =
+                        row.textContent
+                            .toLowerCase()
+                            .includes(value)
+                            ? ""
+                            : "none";
+
+                });
+
+        }
+    );
+
+}
+
+
+const menu =
+    document.getElementById(
+        "menuButton"
+    );
+
+const sidebar =
+    document.getElementById(
+        "sidebar"
+    );
+
+if (menu && sidebar) {
+
+    menu.addEventListener(
+        "click",
+        function() {
+
+            sidebar.classList.toggle(
+                "active"
+            );
+
+        }
+    );
+
+}
+
+</script>
+
+</body>
+</html>
